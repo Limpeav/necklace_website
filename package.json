@@ -1,0 +1,19 @@
+{
+  "name": "necklace-website",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "api",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace api\" \"npm run dev --workspace client\"",
+    "server": "npm run dev --workspace api",
+    "client": "npm run dev --workspace client",
+    "build": "npm run build --workspace client",
+    "seed": "npm run seed --workspace api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
