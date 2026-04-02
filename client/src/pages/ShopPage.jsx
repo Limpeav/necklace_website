@@ -67,15 +67,15 @@ const ShopPage = () => {
   const products = Array.isArray(rawProducts) ? rawProducts : [];
 
   return (
-    <section className="container-shell py-14">
-      <div className="surface-card overflow-hidden px-6 py-8 md:px-8 md:py-10">
+    <section className="container-shell py-10 sm:py-14">
+      <div className="surface-card overflow-hidden px-5 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
         <p className="eyebrow">Contact</p>
         <div className="mt-4 grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:items-start">
           <div className="max-w-3xl">
-            <h1 className="font-display text-5xl leading-none text-white md:text-6xl">
+            <h1 className="font-display text-3xl leading-[0.95] text-white sm:text-4xl md:text-6xl">
               Contact VETA STORE through our social channels.
             </h1>
-            <p className="mt-5 text-sm leading-7 text-stone-300">
+            <p className="mt-4 text-sm leading-7 text-stone-300 sm:mt-5">
               Reach us directly on Telegram, Facebook Page, or TikTok for product questions and updates.
             </p>
           </div>
@@ -115,7 +115,7 @@ const ShopPage = () => {
         {error && <p className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">{error}</p>}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {loading && Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="h-[420px] animate-pulse rounded-[2rem] bg-white/5" />
+            <div key={index} className="h-[340px] animate-pulse rounded-[2rem] bg-white/5 sm:h-[420px]" />
           ))}
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />

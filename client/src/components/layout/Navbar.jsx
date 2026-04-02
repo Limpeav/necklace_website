@@ -7,10 +7,10 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40">
-      <div className="container-shell pt-4">
-        <div className="rounded-[1.75rem] border border-white/10 bg-[rgba(11,12,14,0.82)] px-4 py-3 shadow-luxury backdrop-blur-xl sm:px-6">
+      <div className="container-shell pt-3 sm:pt-4">
+        <div className="rounded-[1.5rem] border border-white/10 bg-[rgba(11,12,14,0.82)] px-4 py-3 shadow-luxury backdrop-blur-xl sm:rounded-[1.75rem] sm:px-6">
           <div className="flex items-center justify-between gap-4">
-            <Link to="/shop" className="font-display text-[2rem] leading-none tracking-[0.18em] text-white">
+            <Link to="/shop" className="font-display text-[1.3rem] leading-none tracking-[0.14em] text-white sm:text-[1.6rem] sm:tracking-[0.18em] md:text-[2rem]">
               VETA STORE
             </Link>
 
@@ -26,7 +26,7 @@ const Navbar = () => {
 
       {open && (
         <div className="container-shell mt-3 md:hidden">
-          <div className="rounded-[1.75rem] border border-white/10 bg-[rgba(11,12,14,0.92)] p-5 shadow-luxury backdrop-blur-xl" />
+          <div className="rounded-[1.5rem] border border-white/10 bg-[rgba(11,12,14,0.92)] p-5 shadow-luxury backdrop-blur-xl sm:rounded-[1.75rem]" />
         </div>
       )}
     </header>

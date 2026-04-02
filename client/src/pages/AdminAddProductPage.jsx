@@ -3,7 +3,6 @@ import { ArrowLeft, Plus } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../api/client";
 import FallbackImage from "../components/FallbackImage";
-import useAsync from "../hooks/useAsync";
 
 const emptyProduct = {
   productCode: "",
@@ -34,6 +33,8 @@ const AdminAddProductPage = () => {
   const isEditing = Boolean(productId);
   const [productForm, setProductForm] = useState(emptyProduct);
   const [submitError, setSubmitError] = useState("");
+  const [loadingProduct, setLoadingProduct] = useState(isEditing);
+  const [loadingError, setLoadingError] = useState("");
 
   useEffect(() => {
     if (!isEditing && !productForm.productCode) {
@@ -47,19 +48,33 @@ const AdminAddProductPage = () => {
     const loadProduct = async () => {
       if (!isEditing) {
         setProductForm(emptyProduct);
+        setLoadingProduct(false);
         return;
       }
 
-      const product = (await api.get(`/products/id/${productId}`)).data;
+      setLoadingProduct(true);
+      setLoadingError("");
 
-      if (!ignore) {
-        setProductForm({
-          productCode: product.productCode || (typeof product.name === "string" && product.name.startsWith("VT") ? product.name : generateProductCode()),
-          price: product.price ?? "",
-          discountPrice: product.discountPrice ?? "",
-          images: product.images || [],
-          stock: product.stock ?? ""
-        });
+      try {
+        const product = (await api.get(`/products/id/${productId}`)).data;
+
+        if (!ignore) {
+          setProductForm({
+            productCode: product.productCode || (typeof product.name === "string" && product.name.startsWith("VT") ? product.name : generateProductCode()),
+            price: product.price ?? "",
+            discountPrice: product.discountPrice ?? "",
+            images: product.images || [],
+            stock: product.stock ?? ""
+          });
+        }
+      } catch (error) {
+        if (!ignore) {
+          setLoadingError(error.response?.data?.message || "Failed to load product");
+        }
+      } finally {
+        if (!ignore) {
+          setLoadingProduct(false);
+        }
       }
     };
 
@@ -122,24 +137,56 @@ const AdminAddProductPage = () => {
     }
   };
 
+  if (loadingProduct) {
+    return (
+      <section className="min-h-screen bg-[#f4f7fb] px-4 py-8 text-slate-900 sm:px-8 sm:py-10 sm:px-10">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="h-4 w-28 animate-pulse rounded bg-slate-200" />
+              <div className="mt-4 h-14 w-80 animate-pulse rounded bg-slate-200" />
+            </div>
+            <div className="h-16 w-40 animate-pulse rounded-3xl bg-white shadow-sm" />
+          </div>
+
+          <div className="rounded-[2rem] bg-white p-5 sm:p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-10">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="h-16 animate-pulse rounded-2xl bg-slate-100 md:col-span-2" />
+              <div className="h-64 animate-pulse rounded-[1.75rem] bg-slate-100 md:col-span-2" />
+              <div className="h-16 animate-pulse rounded-2xl bg-slate-100" />
+              <div className="h-16 animate-pulse rounded-2xl bg-slate-100" />
+              <div className="h-16 animate-pulse rounded-2xl bg-slate-100 md:col-span-2" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="min-h-screen bg-[#f4f7fb] px-8 py-10 text-slate-900 sm:px-10">
+    <section className="min-h-screen bg-[#f4f7fb] px-4 py-8 text-slate-900 sm:px-8 sm:py-10 sm:px-10">
       <div className="mx-auto max-w-[1400px]">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">{isEditing ? "Edit Product" : "Add Product"}</p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-slate-900">{isEditing ? "Update product details" : "Create a new product"}</h1>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">{isEditing ? "Update product details" : "Create a new product"}</h1>
           </div>
           <Link
             to="/admin"
-            className="inline-flex items-center gap-3 rounded-3xl border border-slate-200 bg-white px-6 py-4 text-lg font-medium text-slate-600 shadow-sm transition hover:bg-slate-50"
+            className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-600 shadow-sm transition hover:bg-slate-50 sm:w-auto sm:rounded-3xl sm:px-6 sm:py-4 sm:text-lg"
           >
             <ArrowLeft size={22} />
             Back
           </Link>
         </div>
 
-        <form onSubmit={submitProduct} className="rounded-[2rem] bg-white p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-10">
+        <form onSubmit={submitProduct} className="rounded-[2rem] bg-white p-5 sm:p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-10">
+          {loadingError && (
+            <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600">
+              {loadingError}
+            </div>
+          )}
+
           {submitError && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600">
               {submitError}
@@ -157,7 +204,7 @@ const AdminAddProductPage = () => {
               <label className="mb-4 block text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
                 Product images
               </label>
-              <label className="flex min-h-52 cursor-pointer items-center justify-center rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center text-2xl text-slate-500 transition hover:border-blue-300 hover:text-slate-700">
+              <label className="flex min-h-44 cursor-pointer items-center justify-center rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center text-lg text-slate-500 transition hover:border-blue-300 hover:text-slate-700 sm:min-h-52 sm:text-2xl">
                 <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
                 Choose image files from your laptop
               </label>
@@ -202,7 +249,7 @@ const AdminAddProductPage = () => {
           </div>
 
           <div className="mt-10">
-            <button className="inline-flex items-center gap-3 rounded-3xl bg-gradient-to-r from-blue-700 to-blue-500 px-8 py-5 text-xl font-medium text-white shadow-lg shadow-blue-500/20 transition hover:from-blue-600 hover:to-blue-500">
+            <button className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-500 px-6 py-4 text-lg font-medium text-white shadow-lg shadow-blue-500/20 transition hover:from-blue-600 hover:to-blue-500 sm:w-auto sm:rounded-3xl sm:px-8 sm:py-5 sm:text-xl">
               <Plus size={24} />
               {isEditing ? "Update product" : "Create product"}
             </button>
