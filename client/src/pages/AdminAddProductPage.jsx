@@ -9,7 +9,6 @@ const emptyProduct = {
   productCode: "",
   price: "",
   discountPrice: "",
-  category: "",
   images: [],
   stock: ""
 };
@@ -36,20 +35,11 @@ const AdminAddProductPage = () => {
   const [productForm, setProductForm] = useState(emptyProduct);
   const [submitError, setSubmitError] = useState("");
 
-  const categoriesAsync = useAsync(async () => (await api.get("/categories")).data, []);
-  const categories = Array.isArray(categoriesAsync.data) ? categoriesAsync.data : [];
-
   useEffect(() => {
     if (!isEditing && !productForm.productCode) {
       setProductForm((current) => ({ ...current, productCode: generateProductCode() }));
     }
   }, [isEditing, productForm.productCode]);
-
-  useEffect(() => {
-    if (!productForm.category && categories[0]?._id) {
-      setProductForm((current) => ({ ...current, category: categories[0]._id }));
-    }
-  }, [categories, productForm.category]);
 
   useEffect(() => {
     let ignore = false;
@@ -67,7 +57,6 @@ const AdminAddProductPage = () => {
           productCode: product.productCode || (typeof product.name === "string" && product.name.startsWith("VT") ? product.name : generateProductCode()),
           price: product.price ?? "",
           discountPrice: product.discountPrice ?? "",
-          category: product.category?._id || product.category || "",
           images: product.images || [],
           stock: product.stock ?? ""
         });
@@ -103,6 +92,7 @@ const AdminAddProductPage = () => {
   const submitProduct = async (e) => {
     e.preventDefault();
     setSubmitError("");
+
     const productCode = productForm.productCode || generateProductCode();
 
     const payload = {

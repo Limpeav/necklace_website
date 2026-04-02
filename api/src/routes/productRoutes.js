@@ -23,7 +23,7 @@ router.post(
   "/",
   protect,
   admin,
-  [body("price").isNumeric(), body("category").notEmpty()],
+  [body("price").isNumeric()],
   validate,
   createProduct
 );

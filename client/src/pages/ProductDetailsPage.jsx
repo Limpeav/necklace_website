@@ -39,7 +39,6 @@ const ProductDetailsPage = () => {
         </div>
 
         <div className="surface-card p-8 md:p-10">
-          <p className="eyebrow">{product.category?.name}</p>
           <h1 className="mt-3 font-display text-5xl leading-none text-white">{displayId}</h1>
 
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">

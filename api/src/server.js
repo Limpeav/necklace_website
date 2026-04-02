@@ -16,7 +16,33 @@ const ensureAdminUser = async () => {
   if (!adminEmail) return;
 
   const existing = await User.findOne({ email: adminEmail });
-  if (existing) return;
+  if (existing) {
+    let shouldSave = false;
+
+    if (!existing.isAdmin) {
+      existing.isAdmin = true;
+      shouldSave = true;
+    }
+
+    if (process.env.ADMIN_NAME && existing.name !== process.env.ADMIN_NAME) {
+      existing.name = process.env.ADMIN_NAME;
+      shouldSave = true;
+    }
+
+    if (process.env.ADMIN_PASSWORD) {
+      const passwordMatches = await existing.matchPassword(process.env.ADMIN_PASSWORD);
+      if (!passwordMatches) {
+        existing.password = process.env.ADMIN_PASSWORD;
+        shouldSave = true;
+      }
+    }
+
+    if (shouldSave) {
+      await existing.save();
+    }
+
+    return;
+  }
 
   const admin = await User.create({
     name: process.env.ADMIN_NAME || "Admin User",

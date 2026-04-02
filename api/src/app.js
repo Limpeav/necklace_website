@@ -12,18 +12,32 @@ import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 const app = express();
 
-const allowedOrigins = [
+const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "");
+
+const configuredOrigins = [
   process.env.CLIENT_URL,
+  process.env.CLIENT_URLS
+]
+  .filter(Boolean)
+  .flatMap((value) => value.split(","))
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
+const allowedOrigins = [
+  ...configuredOrigins,
+  "https://lunelle-client.onrender.com",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:5174",
   "http://127.0.0.1:5174"
-].filter(Boolean);
+];
 
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      const normalizedOrigin = normalizeOrigin(origin);
+
+      if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
         callback(null, true);
         return;
       }

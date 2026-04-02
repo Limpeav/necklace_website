@@ -10,7 +10,6 @@ const buildProductQuery = (query) => {
     filters.name = { $regex: query.search, $options: "i" };
   }
 
-  if (query.category) filters.category = query.category;
   if (query.material) filters.material = query.material;
   if (query.color) filters.color = query.color;
 
@@ -51,7 +50,6 @@ const buildProductPayload = (body, existingProduct = {}) => {
     description: body.description ?? existingProduct.description ?? "",
     price: Number(body.price),
     discountPrice: body.discountPrice === null || body.discountPrice === "" ? null : Number(body.discountPrice),
-    category: body.category,
     images: Array.isArray(body.images) ? body.images : existingProduct.images,
     material: Array.isArray(body.material) ? body.material : existingProduct.material,
     color: Array.isArray(body.color) ? body.color : existingProduct.color,
@@ -64,17 +62,17 @@ const buildProductPayload = (body, existingProduct = {}) => {
 const getProducts = asyncHandler(async (req, res) => {
   const filters = buildProductQuery(req.query);
   const sort = buildSortQuery(req.query.sort);
-  const products = await Product.find(filters).populate("category").sort(sort);
+  const products = await Product.find(filters).sort(sort);
   res.json(products);
 });
 
 const getFeaturedProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({ featured: true }).populate("category").limit(8);
+  const products = await Product.find({ featured: true }).limit(8);
   res.json(products);
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id).populate("category");
+  const product = await Product.findById(req.params.id);
 
   if (!product) {
     res.status(404);
@@ -85,7 +83,7 @@ const getProductById = asyncHandler(async (req, res) => {
 });
 
 const getProductBySlug = asyncHandler(async (req, res) => {
-  const product = await Product.findOne({ slug: req.params.slug }).populate("category");
+  const product = await Product.findOne({ slug: req.params.slug });
 
   if (!product) {
     res.status(404);
@@ -94,11 +92,10 @@ const getProductBySlug = asyncHandler(async (req, res) => {
 
   const reviews = await Review.find({ product: product._id }).populate("user", "name").sort({ createdAt: -1 });
   const relatedProducts = await Product.find({
-    category: product.category._id,
     _id: { $ne: product._id }
   })
-    .limit(4)
-    .populate("category");
+    .sort({ createdAt: -1 })
+    .limit(4);
 
   res.json({ product, reviews, relatedProducts });
 });

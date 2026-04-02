@@ -19,27 +19,21 @@ import { formatCurrency } from "../utils/format";
 const AdminDashboardPage = () => {
   const { logout } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
 
   const productsAsync = useAsync(async () => (await api.get("/products")).data, []);
-  const categoriesAsync = useAsync(async () => (await api.get("/categories")).data, []);
 
   const products = Array.isArray(productsAsync.data) ? productsAsync.data : [];
-  const categories = Array.isArray(categoriesAsync.data) ? categoriesAsync.data : [];
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesSearch = !searchTerm || [
         product.productCode,
-        product.name,
-        product.category?.name
+        product.name
       ].filter(Boolean).some((value) => value.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      const matchesCategory = !categoryFilter || product.category?._id === categoryFilter;
-
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     });
-  }, [products, searchTerm, categoryFilter]);
+  }, [products, searchTerm]);
 
   const refreshProducts = async () => {
     const data = (await api.get("/products")).data;
@@ -131,20 +125,10 @@ const AdminDashboardPage = () => {
                   <input
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search products by name or category..."
+                    placeholder="Search products by ID or name..."
                     className="w-full bg-transparent text-lg outline-none placeholder:text-slate-300"
                   />
                 </label>
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-5 py-4 text-lg text-slate-500 outline-none"
-                >
-                  <option value="">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>{category.name}</option>
-                  ))}
-                </select>
               </div>
             </div>
 
@@ -165,9 +149,6 @@ const AdminDashboardPage = () => {
                       />
                     </div>
                     <div className="space-y-5 bg-white/35 p-7 backdrop-blur-xl">
-                      <span className="inline-flex rounded-full border border-blue-300/60 bg-blue-50/80 px-4 py-2 text-sm font-medium text-blue-700">
-                        {product.category?.name || "Uncategorized"}
-                      </span>
                       <div>
                         <div className="flex flex-wrap items-end gap-3">
                           <p className="text-4xl font-semibold tracking-tight text-slate-900">
@@ -206,7 +187,7 @@ const AdminDashboardPage = () => {
 
               {!filteredProducts.length && (
                 <div className="col-span-full rounded-[2rem] bg-white p-10 text-lg text-slate-500 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-                  No products matched the current search or category filter.
+                  No products matched the current search.
                 </div>
               )}
             </div>
