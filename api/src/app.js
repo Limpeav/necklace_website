@@ -13,6 +13,7 @@ import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 const app = express();
 
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "");
+const isRenderOrigin = (origin) => /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(origin);
 
 const configuredOrigins = [
   process.env.CLIENT_URL,
@@ -37,7 +38,11 @@ app.use(
     origin(origin, callback) {
       const normalizedOrigin = normalizeOrigin(origin);
 
-      if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
+      if (
+        !normalizedOrigin ||
+        allowedOrigins.includes(normalizedOrigin) ||
+        isRenderOrigin(normalizedOrigin)
+      ) {
         callback(null, true);
         return;
       }
