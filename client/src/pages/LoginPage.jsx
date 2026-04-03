@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "../styles/Admin.css";
 
 const LoginPage = () => {
   const { login, logout, loading } = useAuth();
@@ -24,22 +25,22 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="container-shell py-10 sm:py-14">
-      <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="surface-card p-5 sm:p-8 md:p-10">
+    <section className="container-shell admin-section">
+      <div className="admin-split">
+        <div className="surface-card" style={{ padding: '2.5rem' }}>
           <p className="eyebrow">Admin access</p>
-          <h1 className="mt-3 font-display text-3xl leading-none text-white sm:text-4xl md:text-5xl">Sign in to manage the VETA STORE catalog.</h1>
-          <p className="mt-6 text-sm leading-7 text-stone-300">
+          <h1 className="admin-title mt-3">Sign in to manage the VETA STORE catalog.</h1>
+          <p className="mt-4 text-stone-300">
             This login is only for admin access to the product dashboard. The storefront remains public for visitors.
           </p>
         </div>
 
-        <div className="surface-card p-5 sm:p-8 md:p-10">
-          <form onSubmit={submit} className="space-y-4">
-            {error && <p className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">{error}</p>}
+        <div className="surface-card" style={{ padding: '2.5rem' }}>
+          <form onSubmit={submit} className="admin-form">
+            {error && <p className="admin-error">{error}</p>}
             <input className="input" placeholder="Email" type="email" value={form.email} onChange={(e) => setForm((current) => ({ ...current, email: e.target.value }))} />
             <input className="input" placeholder="Password" type="password" value={form.password} onChange={(e) => setForm((current) => ({ ...current, password: e.target.value }))} />
-            <button className="btn-primary w-full" disabled={loading}>{loading ? "Signing in..." : "Admin sign in"}</button>
+            <button className="btn-primary" style={{ width: "100%", justifyContent: "center" }} disabled={loading}>{loading ? "Signing in..." : "Admin sign in"}</button>
           </form>
         </div>
       </div>

@@ -7,8 +7,11 @@ const PageShell = ({ children }) => {
 
   if (isAdminRoute) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f4f7fb", color: "#0f172a" }}>
-        {children}
+      <div style={{ position: "relative", overflowX: "hidden", minHeight: "100vh", width: "100%" }}>
+        <div className="bg-blob-1" />
+        <div className="bg-blob-2" />
+        <div className="bg-blob-3" />
+        <main style={{ position: "relative", zIndex: 10 }}>{children}</main>
       </div>
     );
   }
