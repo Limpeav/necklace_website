@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import api from "../api/client";
 import ProductCard from "../components/shop/ProductCard";
 import useAsync from "../hooks/useAsync";
+import "../styles/ShopPage.css";
 
 const defaultFilters = {
   search: "",
@@ -66,63 +67,88 @@ const ShopPage = () => {
 
   const products = Array.isArray(rawProducts) ? rawProducts : [];
 
+const TelegramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m22 2-7 20-4-9-9-4Z"/>
+    <path d="M22 2 11 13"/>
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+
+const TikTokIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+  </svg>
+);
+
   return (
-    <section className="container-shell py-10 sm:py-14">
-      <div className="surface-card overflow-hidden px-5 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+    <section className="container-shell shop-container">
+      <div className="surface-card contact-card">
         <p className="eyebrow">Contact</p>
-        <div className="mt-4 grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:items-start">
-          <div className="max-w-3xl">
-            <h1 className="font-display text-3xl leading-[0.95] text-white sm:text-4xl md:text-6xl">
+        <div className="contact-grid">
+          <div>
+            <h1 className="contact-title">
               Contact VETA STORE through our social channels.
             </h1>
-            <p className="mt-4 text-sm leading-7 text-stone-300 sm:mt-5">
+            <p className="contact-desc">
               Reach us directly on Telegram, Facebook Page, or TikTok for product questions and updates.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+          <div className="social-links">
             <a
               href="https://t.me/Piseth1467"
               target="_blank"
               rel="noreferrer"
-              className="rounded-[1.5rem] border border-gold/20 bg-gold/10 px-5 py-4 text-sm text-stone-100 transition hover:border-gold hover:bg-gold/15"
+              className="social-link"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Telegram</p>
-              <p className="mt-2 break-all text-base text-white">t.me/Piseth1467</p>
+              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <TelegramIcon /> Telegram
+              </p>
+              <p className="social-value">t.me/Piseth1467</p>
             </a>
             <a
               href="https://www.facebook.com/share/17Gr1Lm5du/?mibextid=wwXIfr"
               target="_blank"
               rel="noreferrer"
-              className="rounded-[1.5rem] border border-gold/20 bg-gold/10 px-5 py-4 text-sm text-stone-100 transition hover:border-gold hover:bg-gold/15"
+              className="social-link"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Facebook Page</p>
-              <p className="mt-2 break-all text-base text-white">facebook.com/share/17Gr1Lm5du</p>
+              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <FacebookIcon /> Facebook Page
+              </p>
+              <p className="social-value">facebook.com/share/17Gr1Lm5du</p>
             </a>
             <a
               href="https://www.tiktok.com/@vtshop.vt"
               target="_blank"
               rel="noreferrer"
-              className="rounded-[1.5rem] border border-gold/20 bg-gold/10 px-5 py-4 text-sm text-stone-100 transition hover:border-gold hover:bg-gold/15"
+              className="social-link"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">TikTok</p>
-              <p className="mt-2 break-all text-base text-white">tiktok.com/@vtshop.vt</p>
+              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <TikTokIcon /> TikTok
+              </p>
+              <p className="social-value">tiktok.com/@vtshop.vt</p>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="mt-10">
-        {error && <p className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">{error}</p>}
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="products-wrapper">
+        {error && <p className="error-msg">{error}</p>}
+        <div className="product-grid">
           {loading && Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="h-[340px] animate-pulse rounded-[2rem] bg-white/5 sm:h-[420px]" />
+            <div key={index} className="product-skeleton" />
           ))}
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
         {!loading && !error && products.length === 0 && (
-          <div className="surface-card mt-6 p-8 text-sm text-stone-300">
+          <div className="surface-card empty-state">
             No products available.
           </div>
         )}

@@ -6,18 +6,20 @@ const PageShell = ({ children }) => {
   const isAdminRoute = pathname.startsWith("/admin");
 
   if (isAdminRoute) {
-    return <div className="min-h-screen bg-[#f4f7fb] text-slate-900">{children}</div>;
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#f4f7fb", color: "#0f172a" }}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,_rgba(199,153,83,0.14),_transparent_58%)]" />
-        <div className="absolute right-[-8rem] top-40 h-80 w-80 rounded-full bg-[rgba(88,144,156,0.16)] blur-3xl" />
-        <div className="absolute bottom-0 left-[-6rem] h-96 w-96 rounded-full bg-[rgba(123,58,43,0.16)] blur-3xl" />
-      </div>
+    <div style={{ position: "relative", overflowX: "hidden", minHeight: "100vh", width: "100%" }}>
+      <div className="bg-blob-1" />
+      <div className="bg-blob-2" />
+      <div className="bg-blob-3" />
       <Navbar />
-      <main className="relative z-10">{children}</main>
+      <main style={{ position: "relative", zIndex: 10 }}>{children}</main>
     </div>
   );
 };

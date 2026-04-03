@@ -1,0 +1,38 @@
+.review-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.review-item {
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.review-author {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.review-rating {
+  font-size: 0.875rem;
+  color: #c79953;
+}
+
+.review-comment {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: #d6d3d1;
+}
+
+.review-empty {
+  font-size: 0.875rem;
+  color: #a8a29e;
+}

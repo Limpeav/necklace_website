@@ -6,6 +6,7 @@ import PromoBanner from "../components/home/PromoBanner";
 import TestimonialSection from "../components/home/TestimonialSection";
 import ProductCard from "../components/shop/ProductCard";
 import useAsync from "../hooks/useAsync";
+import "../styles/HomePage.css";
 
 const categoryCards = [
   {
@@ -39,20 +40,20 @@ const HomePage = () => {
       <HeroSection />
       <PromoBanner />
 
-      <section className="container-shell mt-24">
-        <div className="flex items-end justify-between gap-6">
+      <section className="container-shell home-section">
+        <div className="home-section-header">
           <div>
             <p className="eyebrow">Featured products</p>
             <h2 className="section-title mt-3">Best sellers and editorial picks in one clean grid.</h2>
           </div>
-          <Link to="/shop" className="btn-secondary hidden md:inline-flex">
+          <Link to="/shop" className="btn-secondary" style={{ display: "inline-flex" }}>
             View all products
           </Link>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="home-grid">
           {loading && Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-[440px] animate-pulse rounded-[2rem] bg-white/5" />
+            <div key={index} style={{ height: "440px", borderRadius: "2rem", backgroundColor: "rgba(255,255,255,0.05)", animation: "pulse 2s infinite" }} />
           ))}
           {featured?.map((product) => (
             <ProductCard key={product._id} product={product} />
@@ -60,26 +61,26 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="container-shell mt-24">
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="container-shell home-section">
+        <div className="home-split">
           <div className="surface-card p-8 md:p-10">
             <p className="eyebrow">Shop by style</p>
-            <h2 className="mt-3 font-display text-5xl leading-none text-white">
+            <h2 className="home-split-title">
               Fewer generic blocks. More useful collection entry points.
             </h2>
-            <p className="mt-5 text-sm leading-7 text-stone-300">
+            <p className="home-split-desc">
               Each collection block is visual, distinct, and clearly tied to shopping intent instead of decorative filler.
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="home-category-grid">
             {categoryCards.map((item) => (
-              <Link key={item.title} to={item.link} className="group relative overflow-hidden rounded-[2rem] border border-white/10">
-                <FallbackImage src={item.image} alt={item.title} className="h-[25rem] w-full object-cover transition duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
+              <Link key={item.title} to={item.link} className="category-card group">
+                <FallbackImage src={item.image} alt={item.title} className="category-image" />
+                <div className="category-overlay" />
+                <div className="category-text-container">
                   <p className="eyebrow">{item.title}</p>
-                  <h3 className="mt-3 font-display text-4xl leading-none text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-stone-200">{item.copy}</p>
+                  <h3 className="category-title">{item.title}</h3>
+                  <p className="category-desc">{item.copy}</p>
                 </div>
               </Link>
             ))}
@@ -89,21 +90,21 @@ const HomePage = () => {
 
       <TestimonialSection />
 
-      <section className="container-shell mt-24">
-        <div className="surface-card grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-12">
+      <section className="container-shell home-section">
+        <div className="surface-card newsletter-card">
           <div>
             <p className="eyebrow">Email list</p>
-            <h2 className="mt-3 max-w-xl font-display text-5xl leading-none text-white">
+            <h2 className="newsletter-title">
               Restock notices, new drops, and gift edits without the bland newsletter look.
             </h2>
           </div>
-          <div className="space-y-4">
-            <p className="text-sm leading-7 text-stone-300">
+          <div>
+            <p className="newsletter-desc">
               The signup block now matches the store system and works as a proper retention surface instead of an afterthought.
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="newsletter-form">
               <input className="input" placeholder="Enter your email" />
-              <button className="btn-primary whitespace-nowrap">Subscribe</button>
+              <button className="btn-primary" style={{ whiteSpace: "nowrap" }}>Subscribe</button>
             </div>
           </div>
         </div>

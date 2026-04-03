@@ -1,0 +1,92 @@
+.product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+    rgba(17, 19, 21, 0.94);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+  animation: slideUp 0.6s ease;
+  animation-fill-mode: both;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image {
+  height: 16rem;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (min-width: 640px) { .product-image { height: 18rem; } }
+@media (min-width: 1024px) { .product-image { height: 20rem; } }
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.product-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 40%, transparent);
+  pointer-events: none;
+}
+
+.product-id-badge {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.25rem 0.75rem;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@media (min-width: 640px) {
+  .product-id-badge { left: 1rem; top: 1rem; font-size: 12px; letter-spacing: 0.22em; }
+}
+
+.product-info {
+  padding: 1.25rem;
+}
+
+@media (min-width: 640px) { .product-info { padding: 1.5rem; } }
+
+.product-price-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) { .product-price-container { gap: 0.75rem; } }
+
+.product-price {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.product-price-original {
+  font-size: 0.875rem;
+  color: #78716c;
+  text-decoration: line-through;
+}
