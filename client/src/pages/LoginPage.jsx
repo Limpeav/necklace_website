@@ -29,7 +29,7 @@ const LoginPage = () => {
       <div className="admin-split">
         <div className="surface-card" style={{ padding: '2.5rem' }}>
           <p className="eyebrow">Admin access</p>
-          <h1 className="admin-title mt-3">Sign in to manage the VETA STORE catalog.</h1>
+          <h1 className="admin-title mt-3">Sign in to manage the Venta catalog.</h1>
           <p className="mt-4 text-stone-300">
             This login is only for admin access to the product dashboard. The storefront remains public for visitors.
           </p>

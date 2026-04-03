@@ -93,7 +93,7 @@ const ShopPage = () => {
         <div className="contact-grid">
           <div>
             <h1 className="contact-title">
-              Contact VETA STORE through our social channels.
+              Contact Venta through our social channels.
             </h1>
             <p className="contact-desc">
               Reach us directly on Telegram, Facebook Page, or TikTok for product questions and updates.

@@ -8,7 +8,7 @@ const Navbar = () => {
         <div className="navbar-content text-white">
           <div className="flex items-center justify-center">
             <Link to="/shop" className="navbar-logo">
-              VETA STORE
+              VENTA
             </Link>
           </div>
         </div>
