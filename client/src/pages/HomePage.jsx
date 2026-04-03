@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import api from "../api/client";
 import FallbackImage from "../components/FallbackImage";
 import HeroSection from "../components/home/HeroSection";
-import PromoBanner from "../components/home/PromoBanner";
 import TestimonialSection from "../components/home/TestimonialSection";
 import ProductCard from "../components/shop/ProductCard";
 import useAsync from "../hooks/useAsync";
@@ -38,7 +37,6 @@ const HomePage = () => {
   return (
     <>
       <HeroSection />
-      <PromoBanner />
 
       <section className="container-shell home-section">
         <div className="home-section-header">

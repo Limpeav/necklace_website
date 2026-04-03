@@ -22,7 +22,14 @@ const ProductCard = ({ product }) => {
 
       <div className="product-info">
         <div className="product-price-container">
-          <span className="product-price">{formatCurrency(getEffectivePrice(product))}</span>
+          {product.discountPrice ? (
+            <div className="discount-wrapper">
+              <span className="price-new">{formatCurrency(product.discountPrice)}</span>
+              <span className="price-tag">-{Math.round(((product.price - product.discountPrice) / product.price) * 100)}%</span>
+            </div>
+          ) : (
+            <span className="product-price">{formatCurrency(product.price || 0)}</span>
+          )}
           {product.discountPrice && <span className="product-price-original">{formatCurrency(product.price)}</span>}
         </div>
       </div>

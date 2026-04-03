@@ -57,20 +57,6 @@ const HeroSection = () => (
         </div>
 
         <div className="grid gap-5">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10">
-            <FallbackImage
-              src="https://images.unsplash.com/photo-1617038220903-1f61d7f6f84c?auto=format&fit=crop&w=1200&q=80"
-              alt="Luxury necklace"
-              className="h-[29rem] w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-7">
-              <p className="eyebrow">Drop 04</p>
-              <p className="mt-3 max-w-sm font-display text-4xl leading-none text-white">
-                Sculpted shine, darker mood, cleaner product focus.
-              </p>
-            </div>
-          </div>
           <div className="grid gap-5 sm:grid-cols-[1.05fr_0.95fr]">
             <div className="surface-card p-6">
               <p className="eyebrow">Store stats</p>
