@@ -25,6 +25,58 @@ const getFiltersFromParams = (searchParams) => ({
   sort: searchParams.get("sort") || "newest"
 });
 
+const socialChannels = [
+  {
+    name: "Telegram",
+    handle: "@Piseth1467",
+    href: "https://t.me/Piseth1467",
+    Icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="m22 2-7 20-4-9-9-4Z" />
+        <path d="M22 2 11 13" />
+      </svg>
+    )
+  },
+  {
+    name: "Facebook Page",
+    handle: "View page",
+    href: "https://www.facebook.com/share/17Gr1Lm5du/?mibextid=wwXIfr",
+    Icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    )
+  },
+  {
+    name: "TikTok",
+    handle: "@vtshop.vt",
+    href: "https://www.tiktok.com/@vtshop.vt",
+    Icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+      </svg>
+    )
+  }
+];
+
+const getProductErrorMessage = (error) => {
+  if (!error) {
+    return "";
+  }
+
+  const normalized = error.toLowerCase();
+
+  if (normalized.includes("timeout")) {
+    return "Products are taking too long to load right now. Please try again in a moment.";
+  }
+
+  if (normalized.includes("network error")) {
+    return "Unable to reach the shop right now. Please check the connection and try again.";
+  }
+
+  return "Unable to load products right now. Please try again shortly.";
+};
+
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState(() => getFiltersFromParams(searchParams));
@@ -67,31 +119,12 @@ const ShopPage = () => {
 
   const products = Array.isArray(rawProducts) ? rawProducts : [];
 
-  const TelegramIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m22 2-7 20-4-9-9-4Z" />
-      <path d="M22 2 11 13" />
-    </svg>
-  );
-
-  const FacebookIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-
-  const TikTokIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-    </svg>
-  );
-
   return (
     <section className="container-shell shop-container">
       <div className="surface-card contact-card">
         <p className="eyebrow">Contact</p>
         <div className="contact-grid">
-          <div>
+          <div className="contact-copy">
             <h1 className="contact-title">
               Contact Venta through our social channels.
             </h1>
@@ -100,45 +133,31 @@ const ShopPage = () => {
             </p>
           </div>
           <div className="social-links">
-            <a
-              href="https://t.me/Piseth1467"
-              target="_blank"
-              rel="noreferrer"
-              className="social-link"
-            >
-              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <TelegramIcon /> Telegram
-              </p>
-              <p className="social-value">t.me/Piseth1467</p>
-            </a>
-            <a
-              href="https://www.facebook.com/share/17Gr1Lm5du/?mibextid=wwXIfr"
-              target="_blank"
-              rel="noreferrer"
-              className="social-link"
-            >
-              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <FacebookIcon /> Facebook Page
-              </p>
-              <p className="social-value">facebook.com/share/17Gr1Lm5du</p>
-            </a>
-            <a
-              href="https://www.tiktok.com/@vtshop.vt"
-              target="_blank"
-              rel="noreferrer"
-              className="social-link"
-            >
-              <p className="social-type" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <TikTokIcon /> TikTok
-              </p>
-              <p className="social-value">tiktok.com/@vtshop.vt</p>
-            </a>
+            {socialChannels.map(({ name, handle, href, Icon }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="social-link"
+                aria-label={`Open ${name}`}
+              >
+                <p className="social-type">
+                  <span className="social-icon">
+                    <Icon />
+                  </span>
+                  {name}
+                </p>
+                <p className="social-value">{handle}</p>
+                <span className="social-cta">Open channel</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="products-wrapper">
-        {error && <p className="error-msg">{error}</p>}
+        {error && <p className="error-msg">{getProductErrorMessage(error)}</p>}
         <div className="product-grid">
           {loading && Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="product-skeleton" />
