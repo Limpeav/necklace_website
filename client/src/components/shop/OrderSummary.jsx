@@ -19,7 +19,7 @@ const OrderSummary = ({ items, totals }) => (
                 </p>
               </div>
               <p className="text-sm font-semibold text-white">
-                {formatCurrency((item.price || item.product?.discountPrice || item.product?.price) * item.quantity)}
+                {formatCurrency((item.price || item.product?.price) * item.quantity)}
               </p>
             </div>
           );

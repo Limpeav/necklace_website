@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import api from "../api/client";
 import ProductCard from "../components/shop/ProductCard";
-import useAsync from "../hooks/useAsync";
+import { products as localProducts } from "../data/products";
 import "../styles/ShopPage.css";
 
 const defaultFilters = {
@@ -59,22 +58,44 @@ const socialChannels = [
   }
 ];
 
-const getProductErrorMessage = (error) => {
-  if (!error) {
-    return "";
+const applyFilters = (products, filters) =>
+  products.filter((product) => {
+    const matchesSearch = !filters.search || product.name.toLowerCase().includes(filters.search.toLowerCase());
+    const matchesCategory = !filters.category || product.category === filters.category;
+    const matchesMaterial = !filters.material || product.material.includes(filters.material);
+    const matchesColor = !filters.color || product.color.includes(filters.color);
+    const matchesMinPrice = !filters.minPrice || product.price >= Number(filters.minPrice);
+    const matchesMaxPrice = !filters.maxPrice || product.price <= Number(filters.maxPrice);
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesMaterial &&
+      matchesColor &&
+      matchesMinPrice &&
+      matchesMaxPrice
+    );
+  });
+
+const sortProducts = (products, sort) => {
+  const sorted = [...products];
+
+  switch (sort) {
+    case "price-asc":
+      sorted.sort((left, right) => left.price - right.price);
+      break;
+    case "price-desc":
+      sorted.sort((left, right) => right.price - left.price);
+      break;
+    case "best-selling":
+      sorted.sort((left, right) => Number(right.featured) - Number(left.featured));
+      break;
+    case "newest":
+    default:
+      break;
   }
 
-  const normalized = error.toLowerCase();
-
-  if (normalized.includes("timeout")) {
-    return "Products are taking too long to load right now. Please try again in a moment.";
-  }
-
-  if (normalized.includes("network error")) {
-    return "Unable to reach the shop right now. Please check the connection and try again.";
-  }
-
-  return "Unable to load products right now. Please try again shortly.";
+  return sorted;
 };
 
 const ShopPage = () => {
@@ -102,22 +123,10 @@ const ShopPage = () => {
     }
   }, [filters, searchParams, setSearchParams]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== defaultFilters[key]) {
-        params.set(key, value);
-      }
-    });
-    return params.toString();
-  }, [filters]);
-
-  const { data: rawProducts, loading, error } = useAsync(async () => {
-    const { data } = await api.get(`/products?${queryString}`);
-    return data;
-  }, [queryString]);
-
-  const products = Array.isArray(rawProducts) ? rawProducts : [];
+  const products = useMemo(
+    () => sortProducts(applyFilters(localProducts, filters), filters.sort),
+    [filters]
+  );
 
   return (
     <section className="container-shell shop-container">
@@ -157,17 +166,12 @@ const ShopPage = () => {
       </div>
 
       <div className="products-wrapper">
-        {error && <p className="error-msg">{getProductErrorMessage(error)}</p>}
         <div className="product-grid">
-          {loading && Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="product-skeleton" />
-          ))}
-
-          {!loading && products.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
 
-          {!loading && !error && products.length === 0 && (
+          {products.length === 0 && (
             <div className="surface-card empty-state">
               No products available.
             </div>
